@@ -1,8 +1,9 @@
 {
   "name": " Agentic workflows ai tutor",
-  "description": "Imported from GitHub: georgekarlr/ceinteach-101",
+  "description": "Intelligent AI tutor and high-fidelity study companion powered by Gemini 3.7 Flash with interactive home dashboard, live voice & vision, whiteboard diagrams, audio podcasts, and multi-agent workflows.",
   "requestFramePermissions": [
-    "microphone"
+    "microphone",
+    "camera"
   ],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"

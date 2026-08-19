@@ -3,6 +3,7 @@ import { X, KeyRound, ExternalLink, Eye, EyeOff, ShieldCheck, RefreshCw, Check, 
 import type { GeminiSettings } from '@/types';
 import { MODEL_OPTIONS } from '@/types';
 import { useAuth } from '@/hooks/useAuth';
+import { DisplaySettingsCard } from '@/components/DisplaySettingsCard';
 
 interface SettingsModalProps {
   open: boolean;
@@ -310,6 +311,9 @@ export default function SettingsModal({
               </button>
             </div>
           </div>
+
+          {/* Display UI & Full Screen Mode */}
+          <DisplaySettingsCard />
 
           {/* API Key */}
           <div>

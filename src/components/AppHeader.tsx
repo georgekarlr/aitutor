@@ -18,6 +18,7 @@ import {
   Flame,
   LayoutGrid,
   Workflow,
+  Home,
 } from 'lucide-react';
 import type { Conversation, User, Subscription } from '@/types';
 import { ChatExportMenu } from '@/components/ChatExportMenu';
@@ -25,8 +26,8 @@ import { ChatExportMenu } from '@/components/ChatExportMenu';
 interface AppHeaderProps {
   isDesktop: boolean;
   onOpenSidebar: () => void;
-  activeView: 'chat' | 'tutor';
-  onSelectView: (view: 'chat' | 'tutor') => void;
+  activeView: 'home' | 'chat' | 'tutor';
+  onSelectView: (view: 'home' | 'chat' | 'tutor') => void;
   hasActiveTutor: boolean;
   activeConversation: Conversation | null;
   onOpenExportImport: () => void;
@@ -121,6 +122,20 @@ export function AppHeader({
 
         {/* View Switcher Segmented Control */}
         <div className="flex items-center gap-0.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 p-0.5 shrink-0 flex-nowrap">
+          <button
+            type="button"
+            onClick={() => onSelectView('home')}
+            className={`flex items-center gap-1 sm:gap-1.5 rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 text-xs font-semibold whitespace-nowrap transition-all cursor-pointer shrink-0 ${
+              activeView === 'home'
+                ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 shadow-2xs font-bold'
+                : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+            }`}
+            title="Go to Home Dashboard"
+          >
+            <Home className="h-3.5 w-3.5 shrink-0" />
+            <span className="hidden xs:inline whitespace-nowrap">Home</span>
+          </button>
+
           <button
             type="button"
             onClick={() => onSelectView('chat')}

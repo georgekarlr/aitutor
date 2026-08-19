@@ -64,6 +64,16 @@ aitutor provides a unified **Settings** workspace accessible via the gear icon i
   - **Dark Mode**: OLED-friendly, low-strain dark interface optimized for late-night study sessions.
 - Theme preferences are automatically saved in local browser storage and applied instantaneously across all dialogs, drawers, and workspaces.
 
+### 🖥️ Display UI & Full Screen Mode
+- In the **Display & Full Screen UI** section of Settings:
+  - **Toggle Full Screen Display**: Click **Toggle Full Screen Display** or select the **Full Screen Display** card to expand the aitutor learning workspace to occupy your entire screen/monitor.
+  - **Immersion & Focus Benefits**: Removes browser framing and operating system window chrome to create a distraction-free environment for timed mock exams, active recall flashcards, and interactive whiteboard lectures.
+  - **Live Screen Status**: Displays your current viewport resolution (e.g. `1920 × 1080 px`) and visual status badge (`Full Screen Active` with live indicator vs `Standard Window`).
+  - **Keyboard Shortcuts**: Quickly toggle full screen anytime using standard keyboard shortcuts:
+    - **Windows / Linux**: Press `F11` (or `Esc` to exit).
+    - **macOS**: Press `Control + Command + F` (or `Esc` to exit).
+  - **Standard Windowed Mode**: One-click return to framed browser window with normal tabs and taskbars.
+
 ### 🔑 Gemini API Key & Token Defaults (BYOK)
 aitutor uses a Bring-Your-Own-Key (BYOK) architecture with **automatic client-side encryption**:
 1. Click the **Set API key** button or open the **Settings** modal (gear icon).
@@ -83,7 +93,60 @@ aitutor uses a Bring-Your-Own-Key (BYOK) architecture with **automatic client-si
 
 ---
 
-## 4. Responsive Top Navigation & Interactive Tools Menu
+## 4. High-Fidelity Home Dashboard
+
+aitutor features a high-fidelity **Home Dashboard** that serves as the central command center for all study sessions, pedagogical workflows, and agentic intelligence tools.
+
+### 🌟 Key Dashboard Capabilities
+1. **Interactive Greeting & Quick Launch Console (`HomeHero`)**:
+   - **Personalized Greeting**: Welcomes the student with contextual time-of-day greetings (Morning, Afternoon, Evening) and displays your account badge, remaining subscription days, and study streak.
+   - **Universal Topic / Question Input**: Type any subject or learning goal (e.g., *"Explain Quantum Decoherence"*, *"Derive Black-Scholes Formula"*) to instantly launch a live chat or start an adaptive AI Tutor session.
+   - **Quick Suggestion Sparks**: One-click prompt chips (`Quantum Computing`, `Organic Chemistry Mechanisms`, `Bayesian Networks`, `Distributed Consensus`) for instant exploration.
+   - **Quick Action Bar**: Fast launcher buttons for **Start New Chat**, **Interactive Tutor Session**, and **Gemini 3.7 Live Voice & Vision**.
+
+2. **Modular Tool Bento Grid (`HomeToolGrid`)**:
+   - High-contrast categorized cards providing one-click access with live status indicators to all 10 core Studio Tools:
+     - **Gemini 3.7 Live Voice & Vision**: Real-time bidirectional spoken Socratic dialogues with live camera input.
+     - **Adaptive AI Tutor Workspace**: Multi-modal quizzes, dynamic non-overlapping flashcards, and drill modes.
+     - **Visual Whiteboard Walkthroughs**: Multi-step animated interactive whiteboard diagrams with audio voiceover lectures.
+     - **Dual-Host Audio Briefing Studio**: Natural conversational podcasts with transcript sync, speed controls, and auto-generated recaps.
+     - **Timed Mock Exam Simulation**: Comprehensive exam simulations with countdown timers, question navigation matrix, and detailed diagnostic reporting.
+     - **Autonomous Study Curriculum Architect**: Multi-week personalized study syllabi with milestone tracking.
+     - **Document & Syllabus Ingestion Engine**: Deep multimodal extraction for PDFs, Word docs, text files, and images.
+     - **Study Bank & IndexedDB Vault**: Robust offline question bank manager, quiz retake engine, and Word DOCX exporter.
+     - **Deep Work Focus Hub & Binaural Audio**: Custom Pomodoro study intervals, ambient sound generator, and daily streak tracking.
+     - **Live Scratchpad & Real-Time Note Ingestion**: Scratchpad note-taker with instant AI synthesis.
+
+3. **Recent Activity & Study Vault Access (`HomeRecentActivity`)**:
+   - **Recent Conversations List**: Shows your most recent conversation threads with timestamp summaries, message counters, and direct jump-in links.
+   - **Empty State Quick-Start**: When no chats exist, provides direct suggestions to begin your first study session.
+   - **Study Vault Quick Access**: Displays an overview card to open and review your saved quizzes and question sets.
+
+4. **Curated Study Topic Sparks (`HomeStudySparks`)**:
+   - Organized by academic category (**Computer Science & AI**, **Mathematics & Physics**, **Biology & Medicine**, **Finance & Economics**).
+   - Each spark includes difficulty tags, estimated completion times, and one-click actions:
+     - **Chat**: Instantly opens a dedicated deep dive chat on the topic.
+     - **Tutor**: Launches an adaptive multi-item quiz or flashcard session directly.
+
+5. **Multi-Agent Fleet Status Live Monitor (`HomeAgentFleetStatus`)**:
+   - Real-time pedagogical fleet monitor showcasing the specialized agents working collaboratively behind the scenes:
+     - **Socratic Tutor Agent** (Pedagogical Strategy & Active Recall)
+     - **Visual Synthesizer Agent** (Whiteboard & Mathematical Graphics)
+     - **Audio Producer Agent** (Dual-Host Dialogue Generation & TTS)
+     - **Assessment Specialist Agent** (Diagnostic Grading & Exam Generation)
+     - **Research & Ingestion Agent** (Multimodal Parsing & Deep Retrieval)
+     - **Curriculum Architect Agent** (Syllabus Design & Milestone Tracking)
+   - Live operational telemetry count and latency indicator.
+
+### 🧭 Seamless View Switching (Home / Chat / Tutor)
+- Navigate easily between the **Home Dashboard**, **Chat**, and **AI Tutor Workspace** using:
+  - The **Home / Chat / Tutor** segmented control in the top navigation header.
+  - The **Home Dashboard** button in the sidebar (desktop & mobile drawer).
+  - Clicking any conversation in the sidebar or clicking quick-start cards on the Home Page automatically switches to the corresponding workspace with full context preserved.
+
+---
+
+## 5. Responsive Top Navigation & Interactive Tools Menu
 
 aitutor features an adaptive top header designed for zero visual clutter across mobile phones, tablets, and desktop displays.
 

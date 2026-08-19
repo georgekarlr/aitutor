@@ -39,6 +39,7 @@ import { FocusHubModal } from '@/components/FocusHubModal';
 import { AudioPodcastModal } from '@/components/AudioPodcastModal';
 import { ArchitectureDiagramModal } from '@/components/ArchitectureDiagramModal';
 import { AppHeader } from '@/components/AppHeader';
+import { HomePage } from '@/components/HomePage';
 import { useAgentTelemetry } from '@/hooks/useAgentTelemetry';
 import { useFocusHub } from '@/hooks/useFocusHub';
 import { putStudyItemInDB } from '@/lib/studyBankStorage';
@@ -80,7 +81,7 @@ function App() {
   const [podcastOpen, setPodcastOpen] = useState(false);
   const [podcastTopic, setPodcastTopic] = useState<string | undefined>(undefined);
   const [architectureOpen, setArchitectureOpen] = useState(false);
-  const [activeView, setActiveView] = useState<'chat' | 'tutor'>('chat');
+  const [activeView, setActiveView] = useState<'home' | 'chat' | 'tutor'>('home');
 
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamingContent, setStreamingContent] = useState('');
@@ -491,6 +492,49 @@ function App() {
     setActiveView('tutor');
   }, [hasKey]);
 
+  // Home Page Navigation & Launch Handlers
+  const handleHomeStartChat = useCallback(
+    (prompt?: string) => {
+      if (prompt && prompt.trim()) {
+        handleSend(prompt.trim(), []);
+        setActiveView('chat');
+      } else {
+        handleNewChat();
+        setActiveView('chat');
+      }
+    },
+    [handleSend, handleNewChat]
+  );
+
+  const handleHomeStartTutor = useCallback(
+    (topic?: string) => {
+      setActiveView('tutor');
+      if (topic && topic.trim()) {
+        if (!hasKey) {
+          setSettingsOpen(true);
+          return;
+        }
+        tutor.startTutorSession('quiz', topic, 5);
+      } else {
+        handleTutorStart();
+      }
+    },
+    [hasKey, tutor, handleTutorStart]
+  );
+
+  const handleHomeSelectConversation = useCallback(
+    (id: string) => {
+      handleSelect(id);
+      setActiveView('chat');
+    },
+    [handleSelect]
+  );
+
+  const handleHomeNewChat = useCallback(() => {
+    handleNewChat();
+    setActiveView('chat');
+  }, [handleNewChat]);
+
   // If checking authentication or subscription status
   if (loading || (user && subscriptionLoading && !subscription)) {
     return (
@@ -528,6 +572,7 @@ function App() {
             activeId={activeId}
             onSelect={(id) => {
               handleSelect(id);
+              setActiveView('chat');
             }}
             onDelete={deleteConversation}
             onRename={renameConversation}
@@ -535,6 +580,7 @@ function App() {
               handleNewChat();
               setActiveView('chat');
             }}
+            onSelectHome={() => setActiveView('home')}
             onOpenAuth={() => setAuthOpen(true)}
             onOpenSubscription={() => setSubModalOpen(true)}
             onOpenGeminiLive={() => handleOpenGeminiLive()}
@@ -572,12 +618,17 @@ function App() {
               activeId={activeId}
               onSelect={(id) => {
                 handleSelect(id);
+                setActiveView('chat');
               }}
               onDelete={deleteConversation}
               onRename={renameConversation}
               onNew={() => {
                 handleNewChat();
                 setActiveView('chat');
+              }}
+              onSelectHome={() => {
+                setActiveView('home');
+                setSidebarOpen(false);
               }}
               onClose={() => setSidebarOpen(false)}
               onOpenAuth={() => {
@@ -621,6 +672,8 @@ function App() {
           onSelectView={(view) => {
             if (view === 'tutor') {
               handleTutorStart();
+            } else if (view === 'home') {
+              setActiveView('home');
             } else {
               setActiveView('chat');
             }
@@ -657,8 +710,34 @@ function App() {
           onOpenSettings={() => setSettingsOpen(true)}
         />
 
-        {/* View Switcher: Chat vs AI Tutor */}
-        {activeView === 'tutor' ? (
+        {/* View Switcher: Home vs AI Tutor vs Chat */}
+        {activeView === 'home' ? (
+          <HomePage
+            user={user}
+            subscription={subscription}
+            hasActiveSubscription={hasActiveSubscription}
+            hasKey={hasKey}
+            focusStreakCount={focusHub.stats.currentStreak}
+            telemetryCount={telemetry.events.length}
+            conversations={conversations}
+            onStartChat={handleHomeStartChat}
+            onStartTutor={handleHomeStartTutor}
+            onSelectConversation={handleHomeSelectConversation}
+            onNewChat={handleHomeNewChat}
+            onOpenGeminiLive={(topic) => handleOpenGeminiLive(topic)}
+            onOpenDocumentIngestion={handleOpenDocumentIngestion}
+            onOpenMockExam={(subject) => handleOpenMockExam(subject)}
+            onOpenWhiteboard={(topic) => handleOpenWhiteboard(topic)}
+            onOpenPodcast={(topic) => handleOpenPodcast(topic)}
+            onOpenFocusHub={handleOpenFocusHub}
+            onOpenCurriculum={handleOpenCurriculum}
+            onOpenScratchpad={handleOpenScratchpad}
+            onOpenStudyBank={handleOpenStudyBank}
+            onOpenAgentInspector={handleOpenAgentInspector}
+            onOpenArchitecture={() => setArchitectureOpen(true)}
+            onOpenSettings={() => setSettingsOpen(true)}
+          />
+        ) : activeView === 'tutor' ? (
           <div className="flex-1 overflow-y-auto bg-slate-50/50 dark:bg-slate-950">
             <TutorWorkspace
               settings={settings}

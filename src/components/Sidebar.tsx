@@ -18,6 +18,7 @@ import {
   ChevronDown,
   ChevronUp,
   Workflow,
+  Home,
 } from 'lucide-react';
 import type { Conversation } from '@/types';
 import { useAuth } from '@/hooks/useAuth';
@@ -30,6 +31,7 @@ interface SidebarProps {
   onDelete: (id: string) => void;
   onRename: (id: string, title: string) => void;
   onNew: () => void;
+  onSelectHome?: () => void;
   onClose?: () => void;
   onOpenAuth?: () => void;
   onOpenSubscription?: () => void;
@@ -54,6 +56,7 @@ export default function Sidebar({
   onDelete,
   onRename,
   onNew,
+  onSelectHome,
   onClose,
   onOpenAuth,
   onOpenSubscription,
@@ -114,14 +117,27 @@ export default function Sidebar({
         )}
       </div>
 
-      {/* Primary Action */}
-      <div className="px-3 pb-2 shrink-0">
+      {/* Primary Actions: Home & New Chat */}
+      <div className="px-3 pb-2 shrink-0 space-y-1.5">
+        {onSelectHome && (
+          <button
+            onClick={() => {
+              onSelectHome();
+              if (onClose) onClose();
+            }}
+            className="flex w-full items-center gap-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/90 px-3 py-2 text-xs font-bold text-slate-800 dark:text-slate-200 hover:border-sky-400 dark:hover:border-sky-500 hover:bg-sky-50 dark:hover:bg-sky-950/40 transition-all cursor-pointer shadow-2xs"
+          >
+            <Home className="h-4 w-4 text-sky-500" />
+            <span>Home Dashboard</span>
+          </button>
+        )}
+
         <button
           onClick={() => {
             onNew();
             if (onClose) onClose();
           }}
-          className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:border-sky-400 dark:hover:border-sky-500 hover:bg-sky-50 dark:hover:bg-sky-950/30 transition-all cursor-pointer shadow-2xs"
+          className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-200 hover:border-sky-400 dark:hover:border-sky-500 hover:bg-sky-50 dark:hover:bg-sky-950/30 transition-all cursor-pointer shadow-2xs"
         >
           <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M12 5v14M5 12h14" />
