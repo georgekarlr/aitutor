@@ -84,7 +84,11 @@ export function ReadAloudButton({
     >
       {isSpeaking ? (
         <>
-          <VolumeX className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+          <div className="flex items-center gap-0.5 h-3.5">
+            <span className="w-0.5 h-2 bg-emerald-600 dark:bg-emerald-400 rounded-full animate-pulse" />
+            <span className="w-0.5 h-3.5 bg-emerald-600 dark:bg-emerald-400 rounded-full animate-bounce" />
+            <span className="w-0.5 h-2.5 bg-emerald-600 dark:bg-emerald-400 rounded-full animate-pulse" />
+          </div>
           {!iconOnly && <span>Stop Reading</span>}
         </>
       ) : (

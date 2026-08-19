@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import type { TutorMessageData, ChatMessage } from '@/types';
 import { ReadAloudButton, VoiceInputButton } from './VoiceReadInputControls';
+import { MathText } from './MathText';
 
 // ===== Quiz/Exam Question Card =====
 interface QuestionCardProps {
@@ -78,9 +79,10 @@ export function QuestionCard({ data, onSubmitAnswer }: QuestionCardProps) {
               </div>
 
               {data.userAnswer && (
-                <p className="text-xs text-slate-700 dark:text-slate-300 break-words">
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">Your answer:</span> {data.userAnswer}
-                </p>
+                <div className="text-xs text-slate-700 dark:text-slate-300 break-words flex items-start gap-1">
+                  <span className="font-semibold text-slate-800 dark:text-slate-200 shrink-0">Your answer:</span>
+                  <MathText text={data.userAnswer} />
+                </div>
               )}
 
               {!data.isCorrect && (
@@ -88,20 +90,21 @@ export function QuestionCard({ data, onSubmitAnswer }: QuestionCardProps) {
                   <span className="block text-[10px] uppercase tracking-wider text-emerald-700 dark:text-emerald-400 font-bold mb-0.5">
                     Correct Answer:
                   </span>
-                  {data.correctAnswer || 'See explanation below'}
+                  <MathText text={data.correctAnswer || 'See explanation below'} />
                 </div>
               )}
 
               {data.feedback && (
-                <p className="text-xs font-medium text-slate-700 dark:text-slate-200 leading-relaxed break-words">
-                  {data.feedback}
-                </p>
+                <MathText
+                  text={data.feedback}
+                  className="text-xs font-medium text-slate-700 dark:text-slate-200 leading-relaxed block break-words"
+                />
               )}
 
               {data.explanation && (
                 <div className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed bg-white/70 dark:bg-slate-800/70 p-3 rounded-xl border border-slate-200/60 dark:border-slate-700/60 break-words">
                   <span className="font-semibold block mb-0.5 text-slate-800 dark:text-slate-200">Explanation:</span>
-                  {data.explanation}
+                  <MathText text={data.explanation} />
                 </div>
               )}
             </div>
@@ -139,9 +142,11 @@ export function QuestionCard({ data, onSubmitAnswer }: QuestionCardProps) {
       <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm overflow-hidden">
         <div className="p-4 sm:p-5 space-y-3">
           <div className="flex items-start justify-between gap-3">
-            <h3 className="text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-100 leading-relaxed flex-1 break-words">
-              {data.question}
-            </h3>
+            <MathText
+              as="h3"
+              text={data.question || ''}
+              className="text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-100 leading-relaxed flex-1 break-words"
+            />
             <div className="shrink-0 pt-0.5">
               <ReadAloudButton textToRead={data.question || ''} label="Read Question" autoSpeak={true} />
             </div>
@@ -158,9 +163,9 @@ export function QuestionCard({ data, onSubmitAnswer }: QuestionCardProps) {
                 {showHint ? 'Hide hint' : 'Need a hint?'}
               </button>
               {showHint && (
-                <p className="mt-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 px-3 py-2 text-xs text-amber-800 dark:text-amber-200 leading-relaxed break-words">
-                  {data.hint}
-                </p>
+                <div className="mt-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 px-3 py-2 text-xs text-amber-800 dark:text-amber-200 leading-relaxed break-words">
+                  <MathText text={data.hint} />
+                </div>
               )}
             </div>
           )}
@@ -208,9 +213,7 @@ export function QuestionCard({ data, onSubmitAnswer }: QuestionCardProps) {
                         >
                           {letter}
                         </span>
-                        <span className="flex-1 min-w-0 break-words leading-relaxed text-sm">
-                          {opt}
-                        </span>
+                        <MathText text={opt} className="flex-1 min-w-0 break-words leading-relaxed text-sm" />
                       </div>
                       <div
                         className={`h-4 w-4 shrink-0 rounded-full border flex items-center justify-center transition-colors ${
@@ -346,7 +349,10 @@ export function FlashcardCard({ data, onEvaluate, onNext, isLast }: FlashcardCar
               <p className={`text-xs font-bold ${data.isCorrect ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'}`}>
                 {data.isCorrect ? 'Correct Recall!' : 'Review Recommended'}
               </p>
-              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed break-words">{data.feedback}</p>
+              <MathText
+                text={data.feedback}
+                className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed block break-words"
+              />
             </div>
           </div>
         </div>
@@ -388,9 +394,10 @@ export function FlashcardCard({ data, onEvaluate, onNext, isLast }: FlashcardCar
           >
             {!flipped ? (
               <div className="space-y-3">
-                <p className="text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-100 leading-relaxed break-words">
-                  {data.front}
-                </p>
+                <MathText
+                  text={data.front || ''}
+                  className="text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-100 leading-relaxed block break-words"
+                />
                 {data.hint && (
                   <div>
                     <button
@@ -405,9 +412,9 @@ export function FlashcardCard({ data, onEvaluate, onNext, isLast }: FlashcardCar
                       {showHint ? 'Hide hint' : 'Show hint'}
                     </button>
                     {showHint && (
-                      <p className="mt-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 px-3 py-2 text-xs text-amber-800 dark:text-amber-200 break-words leading-relaxed">
-                        {data.hint}
-                      </p>
+                      <div className="mt-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 px-3 py-2 text-xs text-amber-800 dark:text-amber-200 break-words leading-relaxed">
+                        <MathText text={data.hint} />
+                      </div>
                     )}
                   </div>
                 )}
@@ -417,9 +424,10 @@ export function FlashcardCard({ data, onEvaluate, onNext, isLast }: FlashcardCar
               </div>
             ) : (
               <div className="space-y-3 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/20 p-3.5 border border-emerald-200/60 dark:border-emerald-800/40">
-                <p className="text-sm sm:text-base font-medium text-emerald-900 dark:text-emerald-100 leading-relaxed break-words">
-                  {data.back}
-                </p>
+                <MathText
+                  text={data.back || ''}
+                  className="text-sm sm:text-base font-medium text-emerald-900 dark:text-emerald-100 leading-relaxed block break-words"
+                />
                 <p className="text-center text-xs text-emerald-600 dark:text-emerald-400 pt-1 select-none">
                   💡 Click to flip back to question
                 </p>

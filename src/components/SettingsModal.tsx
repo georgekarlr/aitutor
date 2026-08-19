@@ -1,9 +1,34 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, KeyRound, ExternalLink, Eye, EyeOff, ShieldCheck, RefreshCw, Check, Lock, Sun, Moon } from 'lucide-react';
+import {
+  X,
+  KeyRound,
+  ExternalLink,
+  Eye,
+  EyeOff,
+  ShieldCheck,
+  RefreshCw,
+  Check,
+  Lock,
+  Sun,
+  Moon,
+  Volume2,
+  Sparkles,
+  Play,
+  Square,
+} from 'lucide-react';
 import type { GeminiSettings } from '@/types';
 import { MODEL_OPTIONS } from '@/types';
 import { useAuth } from '@/hooks/useAuth';
 import { DisplaySettingsCard } from '@/components/DisplaySettingsCard';
+import {
+  getVoiceSettings,
+  saveVoiceSettings,
+  VOICE_PERSONAS,
+  type VoicePersonaId,
+  type VoiceSettings,
+  TextToSpeech,
+  isTTSAvailable,
+} from '@/lib/voice';
 
 interface SettingsModalProps {
   open: boolean;
@@ -41,6 +66,12 @@ export default function SettingsModal({
     rawDetails?: string;
   } | null>(null);
 
+  // AI Voice Studio state
+  const [voiceSettings, setVoiceSettingsState] = useState<VoiceSettings>(getVoiceSettings());
+  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [isPlayingTestVoice, setIsPlayingTestVoice] = useState(false);
+  const ttsRef = useRef<TextToSpeech | null>(null);
+
   useEffect(() => {
     if (open) {
       setLocalKey(settings.apiKey);
@@ -48,8 +79,49 @@ export default function SettingsModal({
       setLocalTemp(settings.temperature);
       setLocalMaxTokens(settings.maxOutputTokens);
       setTestResult(null);
+
+      // Load voice settings & available system voices
+      setVoiceSettingsState(getVoiceSettings());
+      if (isTTSAvailable()) {
+        if (!ttsRef.current) ttsRef.current = new TextToSpeech();
+        setAvailableVoices(ttsRef.current.getAvailableVoices());
+      }
     }
   }, [open, settings]);
+
+  useEffect(() => {
+    return () => {
+      ttsRef.current?.cancel();
+    };
+  }, []);
+
+  const handleUpdateVoice = (patch: Partial<VoiceSettings>) => {
+    const updated = saveVoiceSettings(patch);
+    setVoiceSettingsState(updated);
+    triggerAutoSaveBadge();
+  };
+
+  const handleTestVoicePlayback = () => {
+    if (!isTTSAvailable()) return;
+    if (!ttsRef.current) ttsRef.current = new TextToSpeech();
+
+    if (isPlayingTestVoice) {
+      ttsRef.current.cancel();
+      setIsPlayingTestVoice(false);
+      return;
+    }
+
+    const persona = VOICE_PERSONAS[voiceSettings.persona] || VOICE_PERSONAS.athena;
+    setIsPlayingTestVoice(true);
+    ttsRef.current.onEnd = () => setIsPlayingTestVoice(false);
+    ttsRef.current.speak(persona.sampleGreeting, {
+      persona: voiceSettings.persona,
+      rate: voiceSettings.speechRate * persona.defaultRate,
+      pitch: voiceSettings.speechPitch * persona.defaultPitch,
+      voiceName: voiceSettings.preferredVoiceName,
+      enableCues: voiceSettings.enableAudioCues,
+    });
+  };
 
   const triggerAutoSaveBadge = () => {
     setSavedBadge(true);
@@ -540,6 +612,164 @@ export default function SettingsModal({
             <p className="mt-1.5 text-[11px] text-slate-400 leading-normal">
               Gemini 3.7 Flash supports an input context window of 1,048,576 tokens (1M tokens) and a max output ceiling of 65,536 tokens (~50k words).
             </p>
+          </div>
+
+          {/* AI Voice & Speech Studio */}
+          <div className="rounded-2xl border border-sky-200 dark:border-sky-900/60 bg-sky-50/50 dark:bg-sky-950/20 p-4 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-sky-500 text-white shadow-sm">
+                  <Volume2 className="h-4 w-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                    AI Voice & Speech Studio
+                    <span className="rounded-full bg-sky-100 dark:bg-sky-900/80 px-2 py-0.5 text-[10px] font-bold text-sky-700 dark:text-sky-300">
+                      Lifelike Audio
+                    </span>
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Dynamic prosody, math-to-speech, and custom tutor personas
+                  </p>
+                </div>
+              </div>
+
+              {/* Test Voice Button */}
+              <button
+                type="button"
+                onClick={handleTestVoicePlayback}
+                className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all shadow-sm cursor-pointer ${
+                  isPlayingTestVoice
+                    ? 'bg-rose-500 text-white hover:bg-rose-600'
+                    : 'bg-sky-600 hover:bg-sky-700 text-white'
+                }`}
+              >
+                {isPlayingTestVoice ? (
+                  <>
+                    <Square className="h-3 w-3 fill-current" />
+                    <span>Stop Preview</span>
+                  </>
+                ) : (
+                  <>
+                    <Play className="h-3 w-3 fill-current" />
+                    <span>Test Voice</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Persona Selector */}
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                Tutor Voice Persona
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {(Object.keys(VOICE_PERSONAS) as VoicePersonaId[]).map((pId) => {
+                  const p = VOICE_PERSONAS[pId];
+                  const isSelected = voiceSettings.persona === pId;
+                  return (
+                    <button
+                      key={pId}
+                      type="button"
+                      onClick={() => handleUpdateVoice({ persona: pId })}
+                      className={`text-left p-2.5 rounded-xl border transition-all cursor-pointer ${
+                        isSelected
+                          ? 'border-sky-500 bg-white dark:bg-slate-900 shadow-sm ring-2 ring-sky-500/20'
+                          : 'border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/50 hover:border-slate-300 dark:hover:border-slate-700'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1">
+                          <Sparkles className="h-3 w-3 text-sky-500" />
+                          {p.name}
+                        </span>
+                        <span className="text-[10px] font-medium text-slate-400">
+                          {p.gender} · {p.accent}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
+                        {p.tagline}
+                      </p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Voice Pitch & Rate Controls */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    Speech Rate
+                  </span>
+                  <span className="text-xs font-mono font-bold text-sky-600 dark:text-sky-400">
+                    {voiceSettings.speechRate.toFixed(2)}x
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="0.7"
+                  max="1.5"
+                  step="0.05"
+                  value={voiceSettings.speechRate}
+                  onChange={(e) => handleUpdateVoice({ speechRate: parseFloat(e.target.value) })}
+                  className="w-full accent-sky-500"
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    Base Pitch
+                  </span>
+                  <span className="text-xs font-mono font-bold text-sky-600 dark:text-sky-400">
+                    {voiceSettings.speechPitch.toFixed(2)}x
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="0.8"
+                  max="1.3"
+                  step="0.05"
+                  value={voiceSettings.speechPitch}
+                  onChange={(e) => handleUpdateVoice({ speechPitch: parseFloat(e.target.value) })}
+                  className="w-full accent-sky-500"
+                />
+              </div>
+            </div>
+
+            {/* Hardware Voice Picker & Audio Cues Toggle */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-2 border-t border-sky-200/60 dark:border-sky-900/40">
+              {availableVoices.length > 0 && (
+                <div className="w-full sm:w-auto flex-1">
+                  <select
+                    value={voiceSettings.preferredVoiceName || ''}
+                    onChange={(e) =>
+                      handleUpdateVoice({ preferredVoiceName: e.target.value || undefined })
+                    }
+                    className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-2 py-1 text-xs text-slate-700 dark:text-slate-200 outline-none"
+                  >
+                    <option value="">Browser Default Voice</option>
+                    {availableVoices.map((v) => (
+                      <option key={v.name} value={v.name}>
+                        {v.name} ({v.lang})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <label className="inline-flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-700 dark:text-slate-300 shrink-0">
+                <input
+                  type="checkbox"
+                  checked={voiceSettings.enableAudioCues}
+                  onChange={(e) => handleUpdateVoice({ enableAudioCues: e.target.checked })}
+                  className="rounded accent-sky-500"
+                />
+                <span>Chime earcons on speech start/end</span>
+              </label>
+            </div>
           </div>
 
           {/* System prompt */}

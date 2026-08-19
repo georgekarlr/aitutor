@@ -31,6 +31,7 @@ import type {
 import { generateExamQuestions, evaluateExamSubmissions } from '@/lib/mockExamGenerator';
 import { ConversationSourceSelector } from '@/components/ConversationSourceSelector';
 import { extractConversationStudyContext } from '@/lib/conversationContext';
+import { MathText } from '@/components/MathText';
 
 interface TimedMockExamModalProps {
   isOpen: boolean;
@@ -664,7 +665,7 @@ export function TimedMockExamModal({
                 </div>
 
                 <div className="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-100 leading-relaxed">
-                  {currentQ.question}
+                  <MathText text={currentQ.question} />
                 </div>
 
                 {/* Multiple Choice Options */}
@@ -693,7 +694,9 @@ export function TimedMockExamModal({
                         >
                           {letter}
                         </span>
-                        <span className="flex-1">{opt}</span>
+                        <div className="flex-1 min-w-0">
+                          <MathText text={opt} />
+                        </div>
                       </button>
                     );
                   })}
@@ -894,28 +897,29 @@ export function TimedMockExamModal({
                         </span>
                       </div>
 
-                      <p className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-slate-100">
-                        {q.question}
-                      </p>
+                      <div className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-slate-100">
+                        <MathText text={q.question} />
+                      </div>
 
                       <div className="text-xs space-y-1 pt-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-slate-500 font-medium">Your Answer:</span>
-                          <span className={isCorrect ? 'text-emerald-700 dark:text-emerald-300 font-semibold' : 'text-rose-700 dark:text-rose-300 font-semibold'}>
-                            {sub?.userAnswer || '(Unanswered)'}
-                          </span>
+                          <span className="text-slate-500 font-medium shrink-0">Your Answer:</span>
+                          <div className={isCorrect ? 'text-emerald-700 dark:text-emerald-300 font-semibold' : 'text-rose-700 dark:text-rose-300 font-semibold'}>
+                            {sub?.userAnswer ? <MathText text={sub.userAnswer} /> : '(Unanswered)'}
+                          </div>
                         </div>
                         {!isCorrect && (
                           <div className="flex items-center gap-2">
-                            <span className="text-slate-500 font-medium">Correct Answer:</span>
-                            <span className="text-emerald-700 dark:text-emerald-300 font-semibold">
-                              {q.correctAnswer}
-                            </span>
+                            <span className="text-slate-500 font-medium shrink-0">Correct Answer:</span>
+                            <div className="text-emerald-700 dark:text-emerald-300 font-semibold">
+                              <MathText text={q.correctAnswer} />
+                            </div>
                           </div>
                         )}
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 italic pt-1">
-                          Rationale: {q.explanation}
-                        </p>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 italic pt-1">
+                          <span>Rationale: </span>
+                          <MathText text={q.explanation} />
+                        </div>
                       </div>
                     </div>
                   );

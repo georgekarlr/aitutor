@@ -4,18 +4,17 @@ import {
   Volume2,
   VolumeX,
   Radio,
-  Loader2,
   Sparkles,
   Square,
   ArrowLeft,
   Settings2,
-  Brain,
   MessageSquare,
   Trophy,
 } from 'lucide-react';
 import type { GeminiSettings, VoiceTutorTurn } from '@/types';
 import { generateVoiceTutorTurn } from '@/lib/factsAndQuestions';
 import { SpeechToText, TextToSpeech } from '@/lib/voice';
+import { VoiceVisualizerOrb } from '@/components/VoiceVisualizerOrb';
 
 interface VoiceOneOnOneSessionProps {
   settings: GeminiSettings;
@@ -341,36 +340,8 @@ export function VoiceOneOnOneSession({
         />
 
         {/* Central Animated Orb Visualizer */}
-        <div className="relative my-6 flex items-center justify-center">
-          <div
-            className={`relative flex h-32 w-32 sm:h-40 sm:w-40 items-center justify-center rounded-full transition-all duration-500 ${
-              status === 'listening'
-                ? 'bg-gradient-to-br from-rose-500 to-pink-600 text-white shadow-2xl shadow-rose-500/40 scale-105'
-                : status === 'speaking'
-                  ? 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-2xl shadow-emerald-500/40 scale-105'
-                  : status === 'thinking'
-                    ? 'bg-gradient-to-br from-sky-500 to-indigo-600 text-white shadow-2xl shadow-sky-500/40'
-                    : 'bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-xl shadow-amber-500/20 hover:scale-105'
-            }`}
-          >
-            {/* Pulse rings */}
-            {(status === 'listening' || status === 'speaking') && (
-              <>
-                <span className="absolute inset-0 rounded-full animate-ping bg-current opacity-25" />
-                <span className="absolute -inset-4 rounded-full border-2 border-current opacity-30 animate-pulse" />
-              </>
-            )}
-
-            {status === 'thinking' ? (
-              <Loader2 className="h-12 w-12 animate-spin" />
-            ) : status === 'listening' ? (
-              <Mic className="h-12 w-12 animate-bounce" />
-            ) : status === 'speaking' ? (
-              <Volume2 className="h-12 w-12 animate-pulse" />
-            ) : (
-              <Brain className="h-12 w-12" />
-            )}
-          </div>
+        <div className="relative my-4 flex items-center justify-center">
+          <VoiceVisualizerOrb state={status} size="lg" showControls={true} />
         </div>
 
         {/* Status Label */}

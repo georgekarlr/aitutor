@@ -854,6 +854,73 @@ Click **Download Architecture PDF** in the modal to generate and download a comp
 - **High-Resolution PNG**: Export a standalone 2x rendered image snapshot of the interactive Architecture Diagram or Flowchart.
 - **Raw JSON Specifications**: Copy the machine-readable architectural schema directly to your clipboard for automated testing or infrastructure configuration.
 
+---
+
+## 25. High-Precision Mathematical Equation & LaTeX Rendering (KaTeX)
+
+aitutor features a comprehensive, high-performance LaTeX and math equation rendering pipeline powered by **KaTeX**:
+
+### 📐 Supported Math Syntaxes
+- **Block Display Math**:
+  - Double dollar delimiters: `$$mL^2 \ddot{\theta} + mgL \sin\theta = 0$$`
+  - LaTeX bracket delimiters: `\[ \ddot{\theta} + \frac{g}{L} \sin\theta = 0 \]`
+- **Inline Math**:
+  - Single dollar delimiters: `$\sin\theta \approx \theta$`
+  - LaTeX parenthesis delimiters: `\( \omega = \sqrt{g/L} \)`
+- **Advanced LaTeX Symbols & Operators**: Supports fractions (`\frac{a}{b}`), differentials/dots (`\ddot{\theta}`, `\dot{x}`), Greek symbols (`\alpha`, `\beta`, `\theta`, `\omega`), matrices, integrals (`\int`), summations (`\sum`), square roots (`\sqrt{...}`), and sub/superscripts.
+
+### 🌐 Ubiquitous Cross-Workspace Support
+KaTeX math rendering is rendered uniformly across:
+1. **Interactive Chat Messages**: Math equations in AI tutor explanations, step-by-step mathematical proofs, and user queries.
+2. **AI Tutor Cards (Quizzes & Flashcards)**: Questions, multiple-choice options, flashcard fronts/backs, hints, and feedback breakdowns.
+3. **Timed Mock Exams**: Proctored multiple-choice exam questions, option choices, scorecard reviews, and rationale explanations.
+4. **Interactive Whiteboard Walkthroughs**: Derivations, step-by-step solutions, and chalkboard equations.
+5. **Study Vault & Question Banks**: Saved flashcard decks and exam sets.
+
+---
+
+## 26. Lifelike AI Voice Engine & Speech Studio (Dynamic Prosody, Personas & Math-to-Speech)
+
+aitutor features a lifelike AI speech synthesis and auditory feedback engine designed to transform robotic text-to-speech into an engaging, emotionally resonant educational dialogue.
+
+### 🎙️ Distinct Tutor Voice Personas
+Users can select between 5 distinct voice personas with unique acoustic signatures, pitch profiles, and pedagogical styles:
+- **Athena (Classical Academic)**: Warm, scholarly, and supportive female persona with measured cadence and encouraging intonation.
+- **Nova (Enthusiastic & High-Energy)**: Dynamic, upbeat female persona tailored for quick drills, celebratory achievements, and high-energy motivation.
+- **Atlas (Calm & Grounded)**: Deep, articulate male persona ideal for dense technical explanations, mathematical derivations, and structural proofs.
+- **Sage (Mindful & Patient)**: Gentle, steady persona designed to de-escalate academic anxiety and guide deep focus.
+- **Orion (Inquisitive Explorer)**: Curious, vibrant male persona that asks thought-provoking Socratic questions with an exploratory tone.
+
+### 🎭 Dynamic Sentence-Level Prosody Modulation
+The voice engine parses text into semantic sentence chunks and dynamically adjusts speech parameters in real time:
+- **Inquisitive Inflections**: Sentences ending in `?` receive an upward pitch and tempo shift to sound naturally curious.
+- **Celebratory Energy**: Sentences ending in `!` are spoken with heightened energy and slightly increased rate for genuine excitement.
+- **Pacing & Cadence**: Structural clauses (commas, semicolons, dashes) introduce brief micro-pauses for natural human breathing rhythm.
+
+### 📐 Math-to-Speech Translation Pipeline
+LaTeX formulas and mathematical expressions are automatically translated into smooth, phonetically natural English:
+- Fractions like `\frac{g}{L}` are spoken as *"g over L"*.
+- Differentials like `\ddot{\theta}` are spoken as *"theta double dot"*.
+- Powers like `mL^2` are spoken as *"m L squared"*.
+- Greek symbols like `\theta`, `\alpha`, `\omega`, `\pi` are translated to *"theta"*, *"alpha"*, *"omega"*, *"pi"*.
+- Square roots like `\sqrt{g/L}` are spoken as *"square root of g over L"*.
+
+### 🔊 Procedural Audio Cues & Earcons
+Built on the HTML5 `AudioContext` without external sound file dependencies:
+- **Voice Start Earcon**: A soft, ascending dual-tone chime (440Hz -> 660Hz) signaling the AI tutor has begun speaking.
+- **Listening Earcon**: A gentle high chime (587Hz) indicating the microphone is open and actively listening to the student.
+- **Voice Complete Earcon**: A calming descending completion cue (520Hz -> 392Hz) marking the end of the tutor's response.
+
+### 🌊 Responsive Sound Wave Visualizers
+- **Dynamic Acoustic Orb**: Pulsing radial aura with animated sound wave frequency bars that expand and react in real time.
+- **Visual Color States**:
+  - *Emerald / Teal*: AI Tutor actively speaking aloud.
+  - *Rose / Amber*: Microphone listening to student voice.
+  - *Indigo / Sky*: AI Tutor synthesizing thoughtful response.
+  - *Calm Slate*: Ready and awaiting voice input.
+
+
+
 
 
 

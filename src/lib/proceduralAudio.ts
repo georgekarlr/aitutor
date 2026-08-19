@@ -412,6 +412,86 @@ class ProceduralAudioEngine {
       // Ignore
     }
   }
+
+  /**
+   * Play soft acoustic shimmer when AI begins speaking.
+   */
+  public playVoiceStartCue() {
+    try {
+      const ctx = this.initContext();
+      const notes = [587.33, 880]; // D5 -> A5 ascending chord
+      notes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.06);
+
+        gain.gain.setValueAtTime(0, ctx.currentTime + idx * 0.06);
+        gain.gain.linearRampToValueAtTime(this.volume * 0.12, ctx.currentTime + idx * 0.06 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + idx * 0.06 + 0.35);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(ctx.currentTime + idx * 0.06);
+        osc.stop(ctx.currentTime + idx * 0.06 + 0.4);
+      });
+    } catch {
+      // Ignore audio cue errors in restricted environments
+    }
+  }
+
+  /**
+   * Play pleasant acoustic cue when voice listening begins.
+   */
+  public playListeningCue() {
+    try {
+      const ctx = this.initContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(440, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(659.25, ctx.currentTime + 0.12); // A4 -> E5
+
+      gain.gain.setValueAtTime(0, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(this.volume * 0.12, ctx.currentTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.28);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.3);
+    } catch {
+      // Ignore
+    }
+  }
+
+  /**
+   * Play subtle harmonic resolution chime when AI finishes speaking turn.
+   */
+  public playVoiceEndCue() {
+    try {
+      const ctx = this.initContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(659.25, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(523.25, ctx.currentTime + 0.15); // E5 -> C5
+
+      gain.gain.setValueAtTime(0, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(this.volume * 0.08, ctx.currentTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.3);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.32);
+    } catch {
+      // Ignore
+    }
+  }
 }
 
 export const proceduralAudio = new ProceduralAudioEngine();
